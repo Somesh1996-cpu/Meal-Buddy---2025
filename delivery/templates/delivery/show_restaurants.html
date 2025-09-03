@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Coral+Pixels&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        *{
+            font-family:Outfit;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 5px;
+            border-spacing: 20px;
+            background-color: azure;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            font-size:15px;
+            border: 1px solid black;
+            font-weight: 500;
+            word-wrap: break-word; /* handles long content in fixed layout */
+        }
+        th {
+            background-color:#0056b3;
+            color: aliceblue;
+            font-size: 18px;
+            text-align: center;
+        }
+        tr{
+            transition: background-color 0.5s ease
+        }
+        tr:hover {
+            background-color:rgb(146, 22, 90);
+            color:white;
+        }  
+        a {
+            display: inline-block;
+            margin:5px 0;
+            padding: 5px 10px;
+            background-color:#FF5200;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 20px;
+            margin-bottom: 10px;
+            transition: transform 0.4s ease, background-color 0.4s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+            transform: scale(1.10);
+        }
+        body{
+           background-color: #FF5200;
+           padding: 20px;
+        }
+        
+    </style>
+<body>
+    <table border="1">
+        <colgroup>
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Restaurant name</th>
+                <th>Picture</th>
+                <th>Cuisine</th>
+                <th>Rating</th>
+                <th>Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%  for r in restaurantList %}
+            <tr>
+                <td>{{ r.name }}</td>
+                <td>
+                    <img src="{{ r.picture }}" style="height: 200px; width:300px; background-repeat:no-repeat; border-radius: 20px 20px 20px 20px; padding:10px;">
+                </td>
+                <td>{{ r.cuisine }}</td>                    
+                <td>{{ r.rating }}</td>
+                <td>
+                    <a href="{% url 'open_update_restaurant' r.id %}">Update Restaurant Info</a>
+                    <br>
+                    <a href="{% url 'delete_restaurant' r.id %}">Delete Restaurant</a>
+                    <br>
+                    <a href="{% url 'open_update_menu' r.id %}">Update Menu</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

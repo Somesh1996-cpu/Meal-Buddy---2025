@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign-up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Coral+Pixels&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+        *{
+            font-family:Outfit;
+        }
+        body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background-color: #ff5200;
+        }
+        label {
+            color:black;
+            font-size:16px;
+            text-align: left;
+        }
+        form {
+            margin-top:10px;
+            display:flex;
+            flex-direction: column;
+            outline: 2px solid black;
+            border-radius:8px;
+            justify-content:center;
+            align-items:center;
+            width:250px;
+            padding: 10px;
+        }
+        input {
+            width:150px;
+            padding: 5px 5px 5px;
+            height:20px;
+            font-size:14px;
+        }
+    
+        p{
+            font-size: 20px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr; /* 150px label, remaining for input */
+            gap: 10px 20px;
+            background-color: #f0f0f0;
+            padding: 30px;
+            border: 1px solid #000;
+            width: fit-content;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        .form-grid label {
+            text-align: right;
+            padding-top: 5px;
+            font-weight: 500;
+        }
+
+        .form-grid input {
+            padding: 5px;
+            width: 200px;
+        }
+
+        .form-grid button {
+            grid-column: span 2; /* Make button span both columns */
+            background-color: #ff5200;
+            display: block;
+            margin: auto;
+            color: white;
+            font-size: 18px;
+            padding: 5px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 5px;
+            width: 150px;
+            transition: background-color 0.4s ease, transform 0.4s ease;
+        }
+        .form-grid button:hover{
+            background-color: #0056b3;
+            transform: scale(1.10);
+        }
+    </style>
+</head>
+<body>
+    <form action="{% url 'signup' %}" method="post" class="form-grid">
+        {% csrf_token %}
+        <p>Sign-Up Here⬇️</p><br>
+        <label>Username </label>
+        <input type="text" name="username" required>
+        <label>Password </label>
+        <input type="password" name="password" required>
+        <label>Email </label>
+        <input type="email" name="email" required>
+        <label>Mobile </label>
+        <input type="text" name="mobile" required>
+        <label>Address </label>
+        <textarea name="address" rows="5" cols="21" required></textarea><br>
+        <button type="submit">SIGN UP</button>
+    </form>
+</body>
+</html>

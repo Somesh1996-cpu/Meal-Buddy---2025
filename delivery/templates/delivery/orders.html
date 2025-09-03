@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Order Summary</title>
+    <style>
+        body{
+            background-color: #ff5200;
+            margin: auto;
+            justify-content: center;
+            padding: 20px;
+        }
+        a{
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+            color: rgb(74, 74, 205)
+        }
+        div{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: auto;
+            border: 1px groove black;
+            padding: 10px;
+            width: 350px;
+            margin-bottom: 10px;
+            background-color: azure;
+            border-radius: 5px;
+        }
+        h1{
+            color: white;
+            text-align: center;
+        }
+        p{
+            line-height: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thank you for your order, {{ username }}!</h1>
+
+<div>
+    <h2>Delivery Address</h2>
+    <p>{{ customer.address }}</p>
+    <br>
+    <p>Your order will be delivered to this location shortly.</p> 
+    <p>Thank you for choosing Meal Mate!🙏</p>
+</div>
+    {% if cart_items %}
+        <a href="{% url 'customer_menu' cart_items.0.restaurant.id username %}">Back to Restaurants</a>
+    {% else %}
+        <a href="/">Back to Home</a>
+    {% endif %}
+</body>
+</html>

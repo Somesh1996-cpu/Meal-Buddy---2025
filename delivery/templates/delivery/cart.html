@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Coral+Pixels&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+    *{
+        font-family:Outfit;
+    }
+    body
+    {
+        background-color: #ff5200;
+    }
+    table {
+        border-collapse: collapse;
+        width: 90%;
+        margin-top: 5px;
+        background-color: azure;
+    }
+    th, td {
+        text-align: left;
+        padding: 5px;
+        border: 1px solid black;
+        font-size:16px;
+        word-wrap: break-word; /* handles long content in fixed layout */
+    }
+    th {
+        background-color:#0056b3;
+        color: aliceblue;
+    }
+    tr{
+        transition: transform 0.4s ease, background-color 0.4s ease;
+    }
+    tbody tr:hover {
+        background-color:rgb(146, 22, 90);
+        color:white;
+        transform: scale(1.01);
+        border-radius: 20px;
+    }    
+    a {
+        display: block;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin:5px 0;
+        padding: 5px 10px;
+        background-color:rgb(231, 25, 25);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    a:hover {
+        background-color: #0056b3;
+    }
+    input[type="submit"] {
+        background-color: #1ba672;
+        border: 1px;
+        padding: 5px;
+        font-size: 14px;
+        border-radius: 5px;
+        color: aliceblue;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    input[type="submit"]:hover{
+        background-color: #0056b3;
+    }
+    p{
+        font-size: 20px;
+        color: white;
+    }
+    h3{
+        color: white;
+    }
+</style>
+<body>
+    <p>Hi {{username}}</p>
+    <!-- show current menu -->
+    <table border="1">
+        <colgroup>
+            <col style="width: 10%;">
+            <col style="width: 25%;">
+            <col style="width: 55%;">
+            <col style="width: 10%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Item Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%  for item in itemList %}
+                <tr>
+                    <td>
+                        <img src="{{ item.picture }}" style="height: 50px; width:70px;background-repeat:no-repeat; border-radius: 20px 20px 20px 20px; padding:10px;">
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <h3>Total price : {{total_price}}</h3>
+        <form action="{% url 'checkout' username %}">
+            <input type="submit" value="CHECK-OUT ✅" />
+        </form>
+    </table>
+</body>
+</html>

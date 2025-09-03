@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Coral+Pixels&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        *{
+            font-family:Outfit;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 5px;
+            border-spacing: 20px;
+            background-color: azure;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            font-size:15px;
+            border: 1px solid black;
+            font-weight: 500;
+            word-wrap: break-word; /* handles long content in fixed layout */
+        }
+        th {
+            background-color:#0056b3;
+            color: aliceblue;
+            font-size: 18px;
+            text-align: center;
+        }
+        tr{
+            transition: background-color 0.5s ease
+        }
+        tr:hover {
+            background-color:rgb(146, 22, 90);
+            color:white;
+        }  
+        a {
+            display: inline-block;
+            margin-left:20px;
+            padding: 5px 10px;
+            background-color:#FF5200;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+        body{
+           background-color: #FF5200;
+        }
+        h3{
+            color: white;
+        }
+        p{
+            text-align: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+    
+<body>
+    <h3 id="welcome">Welcome {{username}}! {{wish}} </h3>
+    <script>
+        let date = new Date();
+        hour = date.getHours();
+
+        function wishUser(hour) {
+        if(hour<12) {
+            return "Good Morning";
+        }
+        else if(hour>=12 & hour<16) {
+            return "Good Afternoon";
+        } else if(hour>=16 & hour<20){
+            return "Good Evening"
+        } else {
+            return "Good Night."
+        }
+    }
+    </script>
+    <p>Explore Restaurants🍽️</p>
+    <table border="1">
+        <colgroup>
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Restaurant name</th>
+                <th>Picture</th>
+                <th>Cuisine</th>
+                <th>Rating</th>
+                <th>Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%  for r in restaurantList %}
+                <tr>
+                    <td>{{ r.name }}</td>
+                    <td>
+                        <img src="{{ r.picture }}" style="height: 200px; width:300px; background-repeat:no-repeat; padding:10px; border-radius: 20px 20px 20px 20px;">
+                    </td>
+                    <td>{{ r.cuisine }}</td>
+                    <td>{{ r.rating }}</td>
+                    <td>
+                        <a href="{% url 'view_menu' r.id username %}">
+                            View Menu
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

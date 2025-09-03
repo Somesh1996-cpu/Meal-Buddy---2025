@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Coral+Pixels&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        *{
+            font-family:Outfit;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 5px;
+            background-color:azure;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            font-size:15px;
+            border: 1px solid black;
+            word-wrap: break-word; /* handles long content in fixed layout */
+        }
+        th {
+            background-color:#0056b3;
+            color: aliceblue;
+            text-align: center;
+        }
+        tr{
+            transition: background-color 0.5s ease
+        }
+        tr:hover {
+            background-color:rgb(146, 22, 90);
+            color:white;
+        }  
+        a {
+            display: inline-block;
+            margin:5px 0;
+            padding: 5px 10px;
+            background-color:aquamarine;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px;
+            transition: transform 0.4s ease, background-color 0.4s ease;
+            color: #1ba672;
+            font-weight: 500px;
+        }
+        a:hover {
+            background-color: #0056b3;
+            transform: scale(1.10);
+            color: white;
+        }
+        body{
+           background-color:#FF5200;
+        }
+        .fa-cart-shopping{
+            font-size: 25px;
+            color: #17d790;
+        }
+        h3{
+            color: white;
+        }
+    </style>
+<body>
+    <h3 id="welcome">Welcome {{ username }}!</h3>
+<script>
+    const hours = new Date().getHours();
+    let wish = hours < 12 ? "Good Morning" :
+               hours < 18 ? "Good Afternoon" : "Good Evening";
+    document.getElementById("welcome").textContent += " " + wish;
+</script>
+
+    <a href="{% url 'show_cart' username %}" >Go to cart</a>
+    <i class="fa-solid fa-cart-shopping"></i>
+
+    <!-- show current menu -->
+    <table border="1">
+        <colgroup>
+            <col style="width: 16.6%;">
+            <col style="width: 16.6%;">
+            <col style="width: 16.6%;">
+            <col style="width: 16.6%;">
+            <col style="width: 16.6%;">
+            <col style="width: 16.6%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Item name</th>
+                <th>Picture</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Is veg?</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%  for item in itemList %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>
+                        <img src="{{ item.picture }}" style="height: 200px; width:240px; background-repeat:no-repeat; border-radius: 20px 20px 20px 20px; padding:10px;">
+                    </td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.vegetarian }}</td>
+                    <td>
+                        <a href="{% url 'add_to_cart' item.id username %}">
+                            Add to cart
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

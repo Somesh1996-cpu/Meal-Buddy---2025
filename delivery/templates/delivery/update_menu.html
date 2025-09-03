@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Coral+Pixels&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+    *{
+        font-family:Outfit;
+    }
+    body
+    {
+        background-color: #FF5200;
+        padding: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 5px;
+        background-color:azure;
+        border-style:groove;
+    }
+    th, td {
+        text-align: left;
+        padding: 5px;
+        border: 1px solid black;
+        font-size:18px;
+        font-weight: 500;
+        word-wrap: break-word; /* handles long content in fixed layout */
+    }
+    th {
+        background-color:#0056b3;
+        color: aliceblue;
+        text-align: center;
+    }
+    tr{
+        transition: background-color 0.5s ease
+    }
+    tr:hover {
+        background-color:rgb(146, 22, 90);
+        color:white;
+    }    
+    a {
+        display: block;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin:5px 0;
+        padding: 5px 10px;
+        background-color:rgb(209, 59, 59);
+        color: white;
+        text-decoration: none;
+        border-radius: 20px;
+        margin: 20px;
+        transition: transform 0.4s ease, background-color 0.4s ease;
+    }
+    a:hover {
+        background-color: #0056b3;
+        transform: scale(1.10);
+    }
+    h1{
+        text-align:center;
+    }
+    input{
+        width:390px;    
+        height:20px;
+        font-size:16px;
+    }
+    .form-grid      
+    {
+        display: grid;            
+        grid-template-columns: 150px 1fr; /* 150px label, remaining for input */
+        gap: 10px 20px;
+        background-color: #f0f0f0;    
+        padding: 30px;
+        border: 1px solid #000;
+        width: 450px;
+        margin: auto;
+        margin-top: 10px;   
+        border-radius: 5px;
+    }
+
+    .form-grid label {
+        text-align: right;
+        padding-top: 3px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .form-grid input {
+        padding: 3px;
+        height: 20px;
+        width: 270px;
+        font-size: 13px;
+    }
+
+    .form-grid input[type="checkbox"] {
+        width: 30px;
+        height: 20px;
+    }
+
+    .form-grid button {
+        grid-column: span 2; /* Make button span both columns */
+        background-color: #FF5200;
+        width: 150px;
+        color: white;
+        font-size: 18px;
+        padding: 7px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        display: block;
+        margin: auto;
+        transition: transform 0.4s ease, background-color 0.4s ease;
+    }
+    .form-grid button:hover {
+        background-color: #0056b3;
+        transform: scale(1.10);
+    }
+    textarea{
+        height: 50px;
+    }
+    h2{
+        text-align: center;
+        color: white;
+    }
+</style>
+</head>
+
+<body>
+    <!-- show current menu -->
+    <table border="1">
+    <colgroup>
+        <col style="width: 16.6%;">
+        <col style="width: 16.6%;">
+        <col style="width: 16.6%;">
+        <col style="width: 16.6%;">
+        <col style="width: 16.6%;">
+        <col style="width: 16.6%;">
+    </colgroup>
+        <thead>
+            <tr>
+                <th>Item name</th>
+                <th>Picture</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Is Vegetarian</th>
+                <th>Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%  for item in itemList %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>
+                        <img src="{{ item.picture }}" style="height: 200px; width:240px; background-repeat:no-repeat; border-radius: 20px 20px 20px 20px; padding:10px;">
+                    </td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.vegetarian }}</td>
+                    <td>
+                        <a href="{% url 'delete_menu_item' item.id %}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table><br><br>
+
+
+    <!-- add food item (form) -->
+
+    <h2>Add more items⬇️</h2>
+    <form action="{% url 'update_menu' restaurant.id %}" method="post" class="form-grid">
+        {% csrf_token %}
+        <label for="name">Item Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" required>
+
+        <label for="vegetarian">Vegetarian:</label>
+        <input type="checkbox" id="vegetarian" name="vegetarian">
+
+        <label for="picture">Image URL:</label>
+        <input type="url" id="picture" name="picture"><br>
+
+        <button type="submit">Add Item</button>
+    </form>
+</body>
+</html>
