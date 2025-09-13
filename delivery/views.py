@@ -10,6 +10,7 @@ def index(request):
     return render(request, 'delivery/index.html')
 
 
+# ----------------- AUTH -----------------
 def open_signin(request):
     return render(request, 'delivery/signin.html')
 
@@ -28,15 +29,14 @@ def signup(request):
 
         if Customer.objects.filter(username=username).exists():
             return HttpResponse("Duplicate username!")
-        else:
-            Customer.objects.create(
-                username=username,
-                password=password,
-                email=email,
-                mobile=mobile,
-                address=address,
-            )
-            return render(request, 'delivery/signin.html')
+        Customer.objects.create(
+            username=username,
+            password=password,  # ⚠️ Plain text - replace with Django auth later
+            email=email,
+            mobile=mobile,
+            address=address,
+        )
+        return render(request, 'delivery/signin.html')
 
     return render(request, 'delivery/signup.html')
 
@@ -51,18 +51,18 @@ def signin(request):
                 username=username, password=password)
             if username == 'admin':
                 return render(request, 'delivery/admin_home.html')
-            else:
-                restaurantList = Restaurant.objects.all()
-                return render(request, 'delivery/customer_home.html', {
-                    "restaurantList": restaurantList,
-                    "username": username
-                })
+            restaurant_list = Restaurant.objects.all()
+            return render(request, 'delivery/customer_home.html', {
+                "restaurantList": restaurant_list,
+                "username": username
+            })
         except Customer.DoesNotExist:
             return render(request, 'delivery/fail.html')
 
     return render(request, 'delivery/signin.html')
 
 
+# ----------------- RESTAURANTS -----------------
 def open_add_restaurant(request):
     return render(request, 'delivery/add_restaurant.html')
 
@@ -76,21 +76,20 @@ def add_restaurant(request):
 
         if Restaurant.objects.filter(name=name).exists():
             return HttpResponse("Duplicate restaurant!")
-        else:
-            Restaurant.objects.create(
-                name=name,
-                picture=picture,
-                cuisine=cuisine,
-                rating=rating,
-            )
-            return render(request, 'delivery/admin_home.html')
+        Restaurant.objects.create(
+            name=name,
+            picture=picture,
+            cuisine=cuisine,
+            rating=rating,
+        )
+        return render(request, 'delivery/admin_home.html')
 
     return render(request, 'delivery/add_restaurant.html')
 
 
 def open_show_restaurant(request):
-    restaurantList = Restaurant.objects.all()
-    return render(request, 'delivery/show_restaurants.html', {"restaurantList": restaurantList})
+    restaurant_list = Restaurant.objects.all()
+    return render(request, 'delivery/show_restaurants.html', {"restaurantList": restaurant_list})
 
 
 def open_update_restaurant(request, restaurant_id):
@@ -107,21 +106,22 @@ def update_restaurant(request, restaurant_id):
         restaurant.rating = request.POST.get('rating')
         restaurant.save()
 
-    restaurantList = Restaurant.objects.all()
-    return render(request, 'delivery/show_restaurants.html', {"restaurantList": restaurantList})
+    restaurant_list = Restaurant.objects.all()
+    return render(request, 'delivery/show_restaurants.html', {"restaurantList": restaurant_list})
 
 
 def delete_restaurant(request, restaurant_id):
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
     restaurant.delete()
-    restaurantList = Restaurant.objects.all()
-    return render(request, 'delivery/show_restaurants.html', {"restaurantList": restaurantList})
+    restaurant_list = Restaurant.objects.all()
+    return render(request, 'delivery/show_restaurants.html', {"restaurantList": restaurant_list})
 
 
+# ----------------- MENU -----------------
 def open_update_menu(request, restaurant_id):
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-    itemList = restaurant.items.all()
-    return render(request, 'delivery/update_menu.html', {"itemList": itemList, "restaurant": restaurant})
+    item_list = restaurant.items.all()
+    return render(request, 'delivery/update_menu.html', {"itemList": item_list, "restaurant": restaurant})
 
 
 def update_menu(request, restaurant_id):
@@ -129,43 +129,48 @@ def update_menu(request, restaurant_id):
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description')
-        price = float(request.POST.get('price'))
+        price = request.POST.get('price')
         vegetarian = request.POST.get('vegetarian') == 'on'
         picture = request.POST.get('picture')
 
+        try:
+            price = float(price)
+        except (TypeError, ValueError):
+            return HttpResponse("Invalid price!")
+
         if Item.objects.filter(name=name, restaurant=restaurant).exists():
             return HttpResponse('Item already exists!')
-        else:
-            Item.objects.create(
-                restaurant=restaurant,
-                name=name,
-                description=description,
-                price=price,
-                vegetarian=vegetarian,
-                picture=picture,
-            )
-            return HttpResponse('Item added successfully!')
+        Item.objects.create(
+            restaurant=restaurant,
+            name=name,
+            description=description,
+            price=price,
+            vegetarian=vegetarian,
+            picture=picture,
+        )
+        return HttpResponse('Item added successfully!')
 
 
 def delete_menu_item(request, item_id):
     item = get_object_or_404(Item, id=item_id)
     restaurant = item.restaurant
     item.delete()
-    itemList = restaurant.items.all()
+    item_list = restaurant.items.all()
     return render(request, 'delivery/update_menu.html',
-                  {"itemList": itemList, "restaurant": restaurant})
+                  {"itemList": item_list, "restaurant": restaurant})
 
 
 def view_menu(request, restaurant_id, username):
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-    itemList = restaurant.items.all()
+    item_list = restaurant.items.all()
     return render(request, 'delivery/customer_menu.html', {
-        "itemList": itemList,
+        "itemList": item_list,
         "restaurant": restaurant,
         "username": username
     })
 
 
+# ----------------- CART -----------------
 def add_to_cart(request, item_id, username):
     item = get_object_or_404(Item, id=item_id)
     customer = get_object_or_404(Customer, username=username)
@@ -188,6 +193,7 @@ def show_cart(request, username):
     })
 
 
+# ----------------- CHECKOUT -----------------
 def checkout(request, username):
     customer = get_object_or_404(Customer, username=username)
     cart = Cart.objects.filter(customer=customer).first()
@@ -203,7 +209,7 @@ def checkout(request, username):
         auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
     order_data = {
-        'amount': int(total_price * 100),  # Amount in paisa
+        'amount': int(total_price * 100),  # in paisa
         'currency': 'INR',
         'payment_capture': '1',
     }
@@ -219,6 +225,7 @@ def checkout(request, username):
     })
 
 
+# ----------------- ORDERS -----------------
 def orders(request, username):
     customer = get_object_or_404(Customer, username=username)
     cart = Cart.objects.filter(customer=customer).first()
